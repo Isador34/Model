@@ -1,29 +1,21 @@
 package main;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glClearDepth;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glShadeModel;
-import static org.lwjgl.opengl.GL11.glViewport;
-import main.model.ModelMain;
+import models.OBJLoader;
+import models.RawModel;
+import models.TexturedModel;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.vector.Vector3f;
+
+import shaders.StaticShader;
+import textures.ModelTexture;
+import entities.Camera;
+import entities.Entity;
 
 public class Main
 {
-    static ModelMain model;
 
     public static void main(String[] args)
     {
@@ -40,39 +32,31 @@ public class Main
             e1.printStackTrace();
         }
 
-        initOpenGL();
-        model = new ModelMain("test");
-        model.setUpList();
-        loop();
-    }
+        Loader loader = new Loader();
+        StaticShader shader = new StaticShader();
+        Renderer renderer = new Renderer(shader);
 
-    static void loop()
-    {
+        
+
+        RawModel model = OBJLoader.loadObjModel("stall", loader);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
+        TexturedModel textureModel = new TexturedModel(model, texture);
+
+        Entity entity = new Entity(textureModel, new Vector3f(0, -03, -20), 0, 0, 0, 1);
+
+        Camera camera = new Camera();
+
         while(!Display.isCloseRequested())
         {
-            model.render();
+            entity.increaseRotation(0, -0.007f, 0);
+            camera.move();
+            renderer.prepare();
+            shader.start();
+            shader.loadViewMatrix(camera);
+            renderer.render(entity, shader);
+            shader.stop();
             Display.update();
-
         }
+        loader.cleanUp();
     }
-    
-    static void initOpenGL()
-    {
-        glEnable(GL_TEXTURE_2D);
-        glShadeModel(GL_SMOOTH);        
-        glDisable(GL_DEPTH_TEST);
-        glDisable(GL_LIGHTING);                    
- 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);                
-        glClearDepth(1);                                       
- 
-        glViewport(0,0,Display.getWidth(),Display.getHeight());
-        glMatrixMode(GL_MODELVIEW);
- 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
-        glMatrixMode(GL_MODELVIEW);
-    }
-
 }
