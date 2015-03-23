@@ -1,6 +1,7 @@
-package models;
+package coeclient.util.model;
 
-import textures.ModelTexture;
+import coeclient.util.model.textures.ModelTexture;
+
 
 public class TexturedModel
 {

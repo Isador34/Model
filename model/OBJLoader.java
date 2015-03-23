@@ -1,4 +1,4 @@
-package models;
+package coeclient.util.model;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import main.Loader;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -60,7 +58,6 @@ public class OBJLoader
                 }
                 else if(line.startsWith("vn "))
                 {
-                    System.out.println(currentLine.length);
                     Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
                     normals.add(normal);
                 }
@@ -113,7 +110,7 @@ public class OBJLoader
             indicesArray[i] = indices.get(i);
         }
         
-        return loader.loadToVAO(verticesArray, textureArray, indicesArray);
+        return loader.loadToVAO(verticesArray, textureArray, verticesArray, indicesArray);
     }
 
     private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, float[] textureArray, float[] normalsArray)

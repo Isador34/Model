@@ -1,4 +1,4 @@
-package models;
+package coeclient.util.model;
 
 public class RawModel
 {

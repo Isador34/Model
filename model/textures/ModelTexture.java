@@ -1,4 +1,4 @@
-package textures;
+package coeclient.util.model.textures;
 
 public class ModelTexture
 {

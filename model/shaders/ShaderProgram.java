@@ -1,4 +1,4 @@
-package shaders;
+package coeclient.util.model.shaders;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
